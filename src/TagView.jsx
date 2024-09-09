@@ -37,26 +37,26 @@ const TagView = ({ tag, onUpdate }) => {
   };
 
   return (
-    <div className="border rounded p-2 my-2">
+    <div className="border rounded-lg p-3 my-3 shadow-sm bg-white">
       <div className="flex items-center mb-2">
-        <button onClick={handleToggleCollapse} className="mr-2">
-          {isCollapsed ? <ChevronRight size={16} /> : <ChevronDown size={16} />}
+        <button onClick={handleToggleCollapse} className="mr-2 hover:text-blue-500">
+          {isCollapsed ? <ChevronRight size={20} /> : <ChevronDown size={20} />}
         </button>
         {isEditingName ? (
           <input
             value={newName}
             onChange={handleNameChange}
             onKeyPress={handleNameSubmit}
-            className="border rounded px-1"
+            className="form-input border-gray-300 rounded px-2"
             autoFocus
           />
         ) : (
-          <span onClick={handleNameEdit} className="cursor-pointer text-blue-600 font-bold">
+          <span onClick={handleNameEdit} className="cursor-pointer text-blue-600 font-semibold">
             {tag.name}
           </span>
         )}
-        <button onClick={handleAddChild} className="ml-auto">
-          <Plus size={16} /> Add Child
+        <button onClick={handleAddChild} className="ml-auto hover:bg-blue-100 p-1 rounded">
+          <Plus size={20} /> Add Child
         </button>
       </div>
       {!isCollapsed && (
@@ -65,7 +65,7 @@ const TagView = ({ tag, onUpdate }) => {
             <input
               value={tag.data}
               onChange={handleDataChange}
-              className="w-full border rounded px-2 py-1"
+              className="w-full form-input border-gray-300 rounded px-2 py-1"
             />
           ) : (
             tag.children?.map((child, index) => (
@@ -89,17 +89,10 @@ const TagView = ({ tag, onUpdate }) => {
 const NestedTagsTree = () => {
   const [tree, setTree] = useState({
     name: 'root',
-    children: [
-      {
-        name: 'child1',
-        children: [
-          { name: 'child1-child1', data: 'c1-c1 Hello' },
-          { name: 'child1-child2', data: 'c1-c2 JS' }
-        ]
-      },
-      { name: 'child2', data: 'c2 World' }
-    ]
+    data: 'Root Data',
   });
+
+  const [exportedDivData, setExportedDivData] = useState(null);
 
   const handleExport = () => {
     const exportData = (node) => {
@@ -114,18 +107,21 @@ const NestedTagsTree = () => {
     
     const exportedTree = exportData(tree);
     console.log(JSON.stringify(exportedTree, null, 2));
-    alert("Exported data logged to console");
+    setExportedDivData(JSON.stringify(exportedTree, null, 2));
   };
 
   return (
-    <div className="p-4">
+    <div className="p-4 bg-gray-50 min-h-screen">
       <TagView
         tag={tree}
         onUpdate={setTree}
       />
-      <button onClick={handleExport} className="mt-4 bg-blue-500 text-white px-4 py-2 rounded">
+      <button onClick={handleExport} className="mt-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded shadow">
         Export
       </button>
+      <div className="mt-2 p-2 bg-white rounded shadow-md">
+        <pre>{exportedDivData}</pre>
+      </div>
     </div>
   );
 };
